@@ -1,0 +1,6 @@
+export default {
+  auth0Domain : 'your_domain.auth0.com',
+  auth0ClientID : 'your_auth0_client_id',
+  auth0ClientSecret : 'your_auth0_client_secret',
+  auth0ApiToken : 'your_auth0_mgmt_api_token'
+}
