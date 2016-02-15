@@ -44,7 +44,7 @@ export default class UserSettings extends React.Component {
     return (
       <Row>
         <Col xs={6}>
-          <h4>Agencies</h4>
+          <h4>Feed Sources</h4>
           {this.props.feeds.map(function(feed, i){
             let name = (feed.name === '') ? '(unnamed feed)' : feed.name
             let ref = 'feed-' + feed.id
