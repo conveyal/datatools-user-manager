@@ -27,6 +27,30 @@ export default class App extends React.Component {
       if (userToken) {
         this.getProfile(userToken)
       }
+      else {
+        var hash = this.lock.parseHash(window.location.hash);
+        if (hash && hash.id_token) {
+          // the user came back from the login (either SSO or regular login),
+          // save the token
+          localStorage.setItem('userToken', hash.id_token);
+
+          // redirect to "targetUrl" if any
+          window.location.href = hash.state || '';
+          return;
+        }
+
+        // check if logged in elsewhere via SSO
+        this.lock.$auth0.getSSOData((err, data) =>  {
+          if (!err && data.sso) {
+            // there is! redirect to Auth0 for SSO
+            this.lock.$auth0.signin({
+              callbackOnLocationHash: true
+            });
+          } else { // assume that we are not logged in
+          }
+        });
+
+      }
     } catch(err) {
       console.log(err)
       console.log('error retrieving user data from localStorage, clearing and starting over')
@@ -82,7 +106,7 @@ export default class App extends React.Component {
         this.feeds = data
         this.feeds.unshift({
           id: "*",
-          name: "All Agencies"
+          name: "All Sources"
         })
 
         this.setState({
@@ -94,6 +118,22 @@ export default class App extends React.Component {
         console.log('error getting feed sources', err)
       }
     })
+
+    // set up single logout
+    setInterval(() => {
+      // if the token is not in local storage, there is nothing to check (i.e. the user is already logged out)
+      if (!localStorage.getItem('userToken')) return;
+
+      this.lock.$auth0.getSSOData((err, data) => {
+        // if there is still a session, do nothing
+        if (err || (data && data.sso)) return;
+
+        // if we get here, it means there is no session on Auth0,
+        // then remove the token and redirect to #login
+        localStorage.removeItem('userToken');
+        window.location.href = '/'
+      });
+    }, 5000)
   }
 
   isAdmin () {
