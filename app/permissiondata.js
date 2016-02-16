@@ -8,22 +8,22 @@ export default class PermissionData {
     }
   }
 
-  hasProject (projectID) {
-    return (projectID in this.projectLookup)
+  hasProject (projectId) {
+    return (projectId in this.projectLookup)
   }
 
-  isProjectAdmin (projectID) {
-    return this.hasProject(projectID) && this.getProjectPermission(projectID, 'administer-project') != null
+  isProjectAdmin (projectId) {
+    return this.hasProject(projectId) && this.getProjectPermission(projectId, 'administer-project') != null
   }
 
-  getProjectPermissions (projectID) {
-    if (!this.hasProject(projectID)) return null
-    return this.projectLookup[projectID].permissions
+  getProjectPermissions (projectId) {
+    if (!this.hasProject(projectId)) return null
+    return this.projectLookup[projectId].permissions
   }
 
-  getProjectPermission (projectID, permissionType) {
-    if (!this.hasProject(projectID)) return null
-    var projectPermissions = this.getProjectPermissions(projectID)
+  getProjectPermission (projectId, permissionType) {
+    if (!this.hasProject(projectId)) return null
+    var projectPermissions = this.getProjectPermissions(projectId)
     for (var permission of projectPermissions) {
       if (permission.type === permissionType) return permission
     }

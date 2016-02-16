@@ -24,8 +24,8 @@ export default class NavigationBar extends React.Component {
           </Navbar.Brand>
         </Navbar.Header>
         <Nav>
-          <NavItem href='http://localhost:9000'>Manager</NavItem>
-          <NavItem href='http://localhost:9001'>Editor</NavItem>
+          <NavItem href={this.props.managerUrl}>Manager</NavItem>
+          <NavItem href={this.props.editorUrl}>Editor</NavItem>
           <NavItem href='#' active>Users</NavItem>
         </Nav>
         <Nav pullRight>

@@ -44,7 +44,7 @@ export default class UserList extends React.Component {
   updateUser (user, permissions) {
     var dtMetadata = user.app_metadata.datatools
     for (var project of dtMetadata.projects) {
-      if (project.project_id === config.projectID) project.permissions = permissions
+      if (project.project_id === config.projectId) project.permissions = permissions
     }
 
     var payload = {
@@ -68,7 +68,7 @@ export default class UserList extends React.Component {
   createUser (email, password, permissions) {
     var projects = []
     projects.push({
-      project_id: config.projectID,
+      project_id: config.projectId,
       permissions: permissions
     })
 
@@ -113,7 +113,7 @@ export default class UserList extends React.Component {
         </Row>
 
         {this.state.users.filter((user) => {
-          return user.permissionData.hasProject(config.projectID)
+          return user.permissionData.hasProject(config.projectId)
         }).map((user, i) => {
           return <UserRow
             feeds={this.props.feeds}
@@ -153,7 +153,7 @@ class UserRow extends React.Component {
   }
 
   render () {
-    var projectPermissions = this.props.user.permissionData.getProjectPermissions(config.projectID)
+    var projectPermissions = this.props.user.permissionData.getProjectPermissions(config.projectId)
     return (
       <Panel>
         <Row>

@@ -18,7 +18,7 @@ export default class App extends React.Component {
       profile: null
     }
 
-    this.lock = new Auth0Lock(config.auth0ClientID, config.auth0Domain)
+    this.lock = new Auth0Lock(config.auth0ClientId, config.auth0Domain)
 
     try {
       // Get the user token if we've saved it in localStorage before
@@ -88,9 +88,9 @@ export default class App extends React.Component {
 
     console.log('getting feed IDs')
     $.ajax({
-      url: config.dataManagerURL + '/api/feedsources',
+      url: config.managerUrl + '/api/feedsources',
       data: {
-        feedcollection: config.projectID
+        feedcollection: config.projectId
       },
       headers: {
         'Authorization': 'Bearer ' + token
@@ -133,17 +133,19 @@ export default class App extends React.Component {
   }
 
   isAdmin () {
-    return this.permissionData && this.permissionData.isProjectAdmin(config.projectID)
+    return this.permissionData && this.permissionData.isProjectAdmin(config.projectId)
   }
 
   render () {
     return (
       <div>
         <NavigationBar
-          title='MTC 511 Transit Data Manager'
+          title={config.title}
           logIn={this.logIn.bind(this)}
           logOut={this.logOut.bind(this)}
           profile={this.state.profile}
+          managerUrl={config.managerUrl}
+          editorUrl={config.editorUrl}
         />
         {this.isAdmin()
           ? <UserList
