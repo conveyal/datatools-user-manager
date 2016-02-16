@@ -28,14 +28,13 @@ export default class CreateUser extends React.Component {
   }
 
   render () {
-
     return (
       <div>
         <Button
-          bsStyle="primary"
-          bsSize="large"
+          bsStyle='primary'
+          bsSize='large'
           onClick={this.open.bind(this)}
-          className="pull-right"
+          className='pull-right'
         >
           Create User
         </Button>
@@ -45,11 +44,11 @@ export default class CreateUser extends React.Component {
             <Modal.Title>Create User</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Input ref='email' type="email" label="Email Address" placeholder="Enter email" />
-            <Input ref='password' type="password" label="Password" />
+            <Input ref='email' type='email' label='Email Address' placeholder='Enter email' />
+            <Input ref='password' type='password' label='Password' />
             <UserSettings
               feeds={this.props.feeds}
-              ref="userSettings"
+              ref='userSettings'
             />
           </Modal.Body>
           <Modal.Footer>

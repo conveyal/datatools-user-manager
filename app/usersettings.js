@@ -18,15 +18,15 @@ export default class UserSettings extends React.Component {
       return checkbox.getChecked()
     }).map((permissionInfo) => {
       var permission = {
-        type : permissionInfo.type,
+        type: permissionInfo.type
       }
-      if(permissionInfo.feedSpecific) permission.feeds = selectedFeeds
+      if (permissionInfo.feedSpecific) permission.feeds = selectedFeeds
       return permission
     })
 
     userPermissions.push({
       type: 'view-feed',
-      feeds : selectedFeeds
+      feeds: selectedFeeds
     })
 
     return userPermissions
@@ -45,20 +45,20 @@ export default class UserSettings extends React.Component {
       <Row>
         <Col xs={6}>
           <h4>Feed Sources</h4>
-          {this.props.feeds.map(function(feed, i){
+          {this.props.feeds.map(function (feed, i) {
             let name = (feed.name === '') ? '(unnamed feed)' : feed.name
             let ref = 'feed-' + feed.id
             let feedContained = lookup['view-feed'] && lookup['view-feed'].indexOf(feed.id) !== -1
             let checked = feedContained ? 'checked' : ''
-            return <Input ref={ref} type="checkbox" defaultChecked={checked} label={name} />;
+            return <Input ref={ref} type='checkbox' defaultChecked={checked} label={name} />
           })}
         </Col>
         <Col xs={6}>
           <h4>Permissions</h4>
-          {allPermissions.map(function(permission, i){
+          {allPermissions.map(function (permission, i) {
             let ref = 'permission-' + permission.type
             let checked = permission.type in lookup
-            return <Input ref={ref} type="checkbox" defaultChecked={checked} label={permission.name} />;
+            return <Input ref={ref} type='checkbox' defaultChecked={checked} label={permission.name} />
           })}
         </Col>
       </Row>

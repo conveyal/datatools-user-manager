@@ -9,8 +9,6 @@ import PermissionData from './permissiondata'
 
 import config from './config'
 
-import styles from './style.css'
-
 export default class UserList extends React.Component {
 
   constructor (props) {
@@ -27,7 +25,7 @@ export default class UserList extends React.Component {
 
   fetchUsers () {
     $.ajax({
-      url : '/secured/getUsers',
+      url: '/secured/getUsers',
       headers: {
         'Authorization': 'Bearer ' + this.props.token
       }
@@ -44,9 +42,8 @@ export default class UserList extends React.Component {
   }
 
   updateUser (user, permissions) {
-
     var dtMetadata = user.app_metadata.datatools
-    for(var project of dtMetadata.projects) {
+    for (var project of dtMetadata.projects) {
       if (project.project_id === config.projectID) project.permissions = permissions
     }
 
@@ -56,7 +53,7 @@ export default class UserList extends React.Component {
     }
 
     $.ajax({
-      url : '/secured/updateUser',
+      url: '/secured/updateUser',
       data: payload,
       method: 'post',
       headers: {
@@ -82,7 +79,7 @@ export default class UserList extends React.Component {
     }
 
     $.ajax({
-      url : '/secured/createUser',
+      url: '/secured/createUser',
       data: payload,
       method: 'post',
       headers: {
@@ -91,7 +88,6 @@ export default class UserList extends React.Component {
     }).done((data) => {
       this.fetchUsers()
     })
-
   }
 
   render () {
@@ -137,7 +133,7 @@ class UserRow extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isEditing : false
+      isEditing: false
     }
   }
 
@@ -147,7 +143,7 @@ class UserRow extends React.Component {
     }
 
     this.setState({
-      isEditing : !this.state.isEditing
+      isEditing: !this.state.isEditing
     })
   }
 
@@ -166,16 +162,16 @@ class UserRow extends React.Component {
           </Col>
           <Col xs={4}>
             <Button className='pull-right' onClick={this.toggleExpansion.bind(this)}>
-              { this.state.isEditing ? 'Save' : 'Edit'}
+              {this.state.isEditing ? 'Save' : 'Edit'}
             </Button>
           </Col>
         </Row>
-        { this.state.isEditing ? (
-          <UserSettings ref="userSettings"
+        {this.state.isEditing ? (
+          <UserSettings ref='userSettings'
             feeds={this.props.feeds}
             userPermissions={projectPermissions}
           />
-        ) : null }
+        ) : null}
       </Panel>
     )
   }
