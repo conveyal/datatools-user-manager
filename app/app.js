@@ -1,7 +1,8 @@
 import React from 'react'
 import $ from 'jquery'
 
-import NavigationBar from './navbar'
+import DatatoolsNavbar from 'datatools-navbar'
+
 import UserList from './userlist'
 import PermissionData from './permissiondata'
 
@@ -75,6 +76,12 @@ export default class App extends React.Component {
     window.location.replace('https://' + config.auth0Domain + '/v2/logout?returnTo=' + window.location.href)
   }
 
+  resetPassword() {
+    this.lock.showReset((err) => {
+      if (!err) this.lock.hide()
+    })
+  }
+
   getProfile (token) {
     // retreive the user profile from Auth0
     $.post('https://' + config.auth0Domain + '/tokeninfo', { id_token: token })
@@ -139,13 +146,15 @@ export default class App extends React.Component {
   render () {
     return (
       <div>
-        <NavigationBar
+        <DatatoolsNavbar
           title={config.title}
-          logIn={this.logIn.bind(this)}
-          logOut={this.logOut.bind(this)}
-          profile={this.state.profile}
           managerUrl={config.managerUrl}
           editorUrl={config.editorUrl}
+          userAdminUrl='#'
+          username={this.state.profile ? this.state.profile.email : null}
+          loginHandler={this.logIn.bind(this)}
+          logoutHandler={this.logOut.bind(this)}
+          resetPasswordHandler={this.resetPassword.bind(this)}
         />
         {this.isAdmin()
           ? <UserList

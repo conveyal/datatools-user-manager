@@ -23,7 +23,8 @@
     "express-jwt": "^3.3.0",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
-    "react-bootstrap": "^0.28.1"
+    "react-bootstrap": "^0.28.1",
+    "datatools-navbar": "^0.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.0.3",
