@@ -58,7 +58,11 @@ export default class App extends React.Component {
   }
 
   logIn () {
-    this.lock.show((err, profile, token) => {
+    var lockOptions = {
+      connections: ['Username-Password-Authentication']
+    }
+    if (config.logo) lockOptions.icon = config.logo
+    this.lock.show(lockOptions, (err, profile, token) => {
       if (err) {
         console.log('There was an error :/', err)
         return
