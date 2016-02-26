@@ -1,5 +1,6 @@
 import React from 'react'
 import $ from 'jquery'
+import fetch from 'isomorphic-fetch'
 
 import DatatoolsNavbar from 'datatools-navbar'
 
@@ -9,6 +10,8 @@ import PermissionData from './permissiondata'
 import config from './config'
 
 import { Grid, Row, Col } from 'react-bootstrap'
+
+import { ajax } from './util'
 
 export default class App extends React.Component {
 
@@ -88,42 +91,53 @@ export default class App extends React.Component {
 
   getProfile (token) {
     // retreive the user profile from Auth0
-    $.post('https://' + config.auth0Domain + '/tokeninfo', { id_token: token })
-      .done((profile) => {
-        this.userLoggedIn(token, profile)
-      })
+    ajax({
+      url: 'https://' + config.auth0Domain + '/tokeninfo',
+      data: { id_token: token },
+      method: 'post',
+      success: (profile) => { this.userLoggedIn(token, profile) },
+      error: (err) => { this.logOut() }
+    })
   }
 
   userLoggedIn (token, profile) {
     this.permissionData = new PermissionData(profile.app_metadata.datatools)
 
-    console.log('getting feed IDs')
-    $.ajax({
+    // retrieve all projects (feed collections) and populate feeds for the default project
+    var getFeedColls = ajax({
+      url: config.managerUrl + '/api/feedcollections',
+      headers: { 'Authorization': 'Bearer ' + token }
+    })
+    var getFeedSources = ajax({
       url: config.managerUrl + '/api/feedsources',
-      data: {
-        feedcollection: config.projectId
-      },
-      headers: {
-        'Authorization': 'Bearer ' + token
-      },
-      success: (data) => {
-        console.log('got feed sources', data)
+      headers: { 'Authorization': 'Bearer ' + token }
+    })
 
-        // initialize the feed listing, including a catch-all entry at the beginning
-        this.feeds = data
-        this.feeds.unshift({
+    Promise.all([getFeedColls, getFeedSources]).then((results) => {
+      this.projects = results[0]
+      var projectLookup = {}
+      for (var project of this.projects) {
+        projectLookup[project.id] = project
+        // initialize feed array with the wildcard feed
+        project.feeds = [{
           id: '*',
           name: 'All Sources'
-        })
-
-        this.setState({
-          profile: profile,
-          token: token
-        })
-      },
-      error: (err) => {
-        console.log('error getting feed sources', err)
+        }]
       }
+
+      // populate project-level feed arrays
+      for (var feed of results[1]) {
+        projectLookup[feed.feedCollection.id].feeds.push(feed)
+      }
+
+      this.setState({
+        profile: profile,
+        token: token
+      })
+    })
+    .catch((err) => {
+      console.error(err)
+      console.error(err.stack)
     })
 
     // set up single logout
@@ -144,7 +158,8 @@ export default class App extends React.Component {
   }
 
   isAdmin () {
-    return this.permissionData && this.permissionData.isProjectAdmin(config.projectId)
+    var appAdmin = this.permissionData && this.permissionData.isApplicationAdmin()
+    return appAdmin
   }
 
   render () {
@@ -164,6 +179,7 @@ export default class App extends React.Component {
           ? <UserList
             token={this.state.token}
             feeds={this.feeds}
+            projects={this.projects}
           />
           : <Grid><Row><Col xs={12}>You must be logged in as an adminstrator to access this area</Col></Row></Grid>}
 

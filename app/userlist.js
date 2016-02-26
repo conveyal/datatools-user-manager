@@ -42,14 +42,9 @@ export default class UserList extends React.Component {
   }
 
   updateUser (user, permissions) {
-    var dtMetadata = user.app_metadata.datatools
-    for (var project of dtMetadata.projects) {
-      if (project.project_id === config.projectId) project.permissions = permissions
-    }
-
     var payload = {
       user_id: user.user_id,
-      data: dtMetadata
+      data: permissions
     }
 
     $.ajax({
@@ -66,16 +61,10 @@ export default class UserList extends React.Component {
   }
 
   createUser (email, password, permissions) {
-    var projects = []
-    projects.push({
-      project_id: config.projectId,
-      permissions: permissions
-    })
-
     var payload = {
       email: email,
       password: password,
-      projects: projects
+      permissions: permissions
     }
 
     $.ajax({
@@ -106,20 +95,19 @@ export default class UserList extends React.Component {
           </Col>
           <Col xs={4}>
             <CreateUser
+              projects={this.props.projects}
               createUser={this.createUser.bind(this)}
-              feeds={this.props.feeds}
             />
           </Col>
         </Row>
 
-        {this.state.users.filter((user) => {
-          return user.permissionData.hasProject(config.projectId)
-        }).map((user, i) => {
+        {this.state.users.map((user, i) => {
           return <UserRow
-            feeds={this.props.feeds}
+            projects={this.props.projects}
             user={user}
             key={i}
             updateUser={this.updateUser.bind(this)}
+            token={this.props.token}
           />
         })}
 
@@ -149,13 +137,14 @@ class UserRow extends React.Component {
 
   save () {
     console.log('saving ', this.props.user)
+    console.log(this.refs.userSettings.getSettings())
     this.props.updateUser(this.props.user, this.refs.userSettings.getSettings())
   }
 
   render () {
-    var projectPermissions = this.props.user.permissionData.getProjectPermissions(config.projectId)
+    //var projectPermissions = this.props.user.permissionData.getProjectPermissions(config.projectId)
     return (
-      <Panel>
+      <Panel bsStyle='primary' collapsible expanded={this.state.isEditing} header={
         <Row>
           <Col xs={8}>
             <h4>{this.props.user.email}</h4>
@@ -166,12 +155,11 @@ class UserRow extends React.Component {
             </Button>
           </Col>
         </Row>
-        {this.state.isEditing ? (
-          <UserSettings ref='userSettings'
-            feeds={this.props.feeds}
-            userPermissions={projectPermissions}
-          />
-        ) : null}
+      }>
+        <UserSettings ref='userSettings'
+          projects={this.props.projects}
+          userPermissions={this.props.user.permissionData}
+        />
       </Panel>
     )
   }

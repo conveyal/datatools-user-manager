@@ -118,9 +118,7 @@ app.post('/secured/createUser', function(req, res) {
     'email': req.body.email,
     'password': req.body.password,
     'app_metadata': {
-      'datatools' : {
-        'projects' : req.body.projects
-      }
+      'datatools' : req.body.permissions
     }
   }
   console.log(user)

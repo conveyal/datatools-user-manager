@@ -4,6 +4,8 @@ import { Button, Modal, Input } from 'react-bootstrap'
 
 import UserSettings from './usersettings'
 
+import PermissionData from './permissiondata'
+
 export default class CreateUser extends React.Component {
 
   constructor (props) {
@@ -47,7 +49,8 @@ export default class CreateUser extends React.Component {
             <Input ref='email' type='email' label='Email Address' placeholder='Enter email' />
             <Input ref='password' type='password' label='Password' />
             <UserSettings
-              feeds={this.props.feeds}
+              projects={this.props.projects}
+              userPermissions={new PermissionData()}
               ref='userSettings'
             />
           </Modal.Body>

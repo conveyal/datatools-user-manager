@@ -1,9 +1,9 @@
 export default [
-  {
+  /*{
     type: 'administer-project',
     name: 'Administer Project',
     feedSpecific: false
-  },
+  },*/
   {
     type: 'manage-feed',
     name: 'Manage Feed Configuration',

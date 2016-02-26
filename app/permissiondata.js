@@ -1,11 +1,22 @@
 export default class PermissionData {
   constructor (datatoolsJson) {
+    this.appPermissionLookup = {}
+    if (datatoolsJson && datatoolsJson.permissions) {
+      for (var appPermission of datatoolsJson.permissions) {
+        this.appPermissionLookup[appPermission.type] = appPermission
+      }
+    }
+
     this.projectLookup = {}
     if (datatoolsJson && datatoolsJson.projects) {
       for (var project of datatoolsJson.projects) {
         this.projectLookup[project.project_id] = project
       }
     }
+  }
+
+  isApplicationAdmin () {
+    return ('administer-application' in this.appPermissionLookup)
   }
 
   hasProject (projectId) {
@@ -19,6 +30,11 @@ export default class PermissionData {
   getProjectPermissions (projectId) {
     if (!this.hasProject(projectId)) return null
     return this.projectLookup[projectId].permissions
+  }
+
+  getProjectDefaultFeeds (projectId) {
+    if (!this.hasProject(projectId)) return null
+    return this.projectLookup[projectId].defaultFeeds || []
   }
 
   getProjectPermission (projectId, permissionType) {

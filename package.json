@@ -22,9 +22,11 @@
     "express": "^4.13.3",
     "express-jwt": "^3.3.0",
     "react": "^0.14.3",
+    "react-addons-update": "^0.14.7",
     "react-dom": "^0.14.3",
     "react-bootstrap": "^0.28.1",
-    "datatools-navbar": "^0.1.0"
+    "datatools-navbar": "^0.1.0",
+    "isomorphic-fetch": "^2.2.1"
   },
   "devDependencies": {
     "autoprefixer": "^6.0.3",
