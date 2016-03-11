@@ -5,7 +5,7 @@ import { Panel, Grid, Row, Col, Button } from 'react-bootstrap'
 
 import CreateUser from './createuser'
 import UserSettings from './usersettings'
-import PermissionData from './permissiondata'
+import { UserPermissions } from 'datatools-common'
 
 import config from './config'
 
@@ -31,7 +31,7 @@ export default class UserList extends React.Component {
       }
     }).done((data) => {
       var users = JSON.parse(data).map((user) => {
-        user.permissionData = new PermissionData(user.app_metadata ? user.app_metadata.datatools : null)
+        user.userPermissions = new UserPermissions(user.app_metadata ? user.app_metadata.datatools : null)
         return user
       })
 
@@ -142,7 +142,6 @@ class UserRow extends React.Component {
   }
 
   render () {
-    //var projectPermissions = this.props.user.permissionData.getProjectPermissions(config.projectId)
     return (
       <Panel bsStyle='primary' collapsible expanded={this.state.isEditing} header={
         <Row>
@@ -158,7 +157,7 @@ class UserRow extends React.Component {
       }>
         <UserSettings ref='userSettings'
           projects={this.props.projects}
-          userPermissions={this.props.user.permissionData}
+          userPermissions={this.props.user.userPermissions}
         />
       </Panel>
     )

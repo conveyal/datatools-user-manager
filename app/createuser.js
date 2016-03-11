@@ -4,7 +4,7 @@ import { Button, Modal, Input } from 'react-bootstrap'
 
 import UserSettings from './usersettings'
 
-import PermissionData from './permissiondata'
+import { UserPermissions } from 'datatools-common'
 
 export default class CreateUser extends React.Component {
 
@@ -50,7 +50,7 @@ export default class CreateUser extends React.Component {
             <Input ref='password' type='password' label='Password' />
             <UserSettings
               projects={this.props.projects}
-              userPermissions={new PermissionData()}
+              userPermissions={new UserPermissions()}
               ref='userSettings'
             />
           </Modal.Body>
